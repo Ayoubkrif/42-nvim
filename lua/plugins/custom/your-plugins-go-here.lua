@@ -8,4 +8,6 @@ return {
 	-- The naming convention is "GitHub Profile/GitHub Repo"
 	--example:
 	-- 'elkowar/yuck.vim'
+	'Ayoubkrif/42-nvim'
+		
 }
