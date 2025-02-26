@@ -7,7 +7,7 @@ return {
   -- The naming convention is "GitHub Profile/GitHub Repo"
   --example:
   -- 'elkowar/yuck.vim'
-  --'Ayoubkrif/42-nvim',
+  'Ayoubkrif/42-nvim',
 
   -- Add GitHub Copilot plugin
   {
