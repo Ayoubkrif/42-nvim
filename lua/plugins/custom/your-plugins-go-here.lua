@@ -19,4 +19,24 @@ return {
       vim.api.nvim_set_keymap('i', '<C-J>', 'copilot#Accept("<CR>")', { silent = true, expr = true })
     end,
   },
+
+  {
+	"nvim-treesitter/nvim-treesitter",
+	opts = {
+	  -- On ajoute un autocmd simple basé sur le FileType
+	  -- pour colorer tous les appels à DBG(...) comme des commentaires
+	  setup = function()
+		vim.api.nvim_create_autocmd({ "FileType" }, {
+		  pattern = { "c", "cpp" },
+		  callback = function()
+			vim.cmd([[
+			  syntax match DebugMacro /\<DBG\>/ containedin=ALL
+			  highlight link DebugMacro Comment
+			]])
+		  end,
+		})
+	  end,
+	},
+  },
+  
 }
