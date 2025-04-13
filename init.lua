@@ -51,6 +51,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
   pattern = "*.c,*.h",
   callback = function()
     vim.cmd([[
+      " Trouve DBG(...) et applique une coloration grise
       syntax match DebugMacro /\<DBG\s*(.*)\>/ containedin=ALL
       highlight DebugMacro guifg=#5c6370 ctermfg=8
     ]])
