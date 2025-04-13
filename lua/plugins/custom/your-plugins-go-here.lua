@@ -20,23 +20,14 @@ return {
     end,
   },
 
-  {
-	"nvim-treesitter/nvim-treesitter",
-	opts = {
-	  -- On ajoute un autocmd simple basé sur le FileType
-	  -- pour colorer tous les appels à DBG(...) comme des commentaires
-	  setup = function()
-		vim.api.nvim_create_autocmd({ "FileType" }, {
-		  pattern = { "c", "cpp" },
-		  callback = function()
-			vim.cmd([[
-			  syntax match DebugMacro /\<DBG\>/ containedin=ALL
-			  highlight link DebugMacro Comment
-			]])
-		  end,
-		})
-	  end,
-	},
-  },
-  
+vim.api.nvim_create_autocmd("BufEnter", {
+  pattern = "*.c,*.h",
+  callback = function()
+    vim.cmd([[
+      syntax match DebugMacro /\<DBG\s*\>/ containedin=ALL
+      highlight DebugMacro guifg=#5c6370 ctermfg=8
+    ]])
+  end,
+})
+
 }
