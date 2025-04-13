@@ -45,3 +45,14 @@ if (vim.g.user42 ~= "SET YOUR USER UP") then
 else
 	vim.notify("If you see this you haven't configured your stuff!\nDon't forget to take a peek at your ~/.config/nvim", "error", { title = " 42-Nvim" })
 end
+
+-- Applique la coloration de DBG(...) en commentaire dans les fichiers C et H
+vim.api.nvim_create_autocmd("BufEnter", {
+  pattern = "*.c,*.h",
+  callback = function()
+    vim.cmd([[
+      syntax match DebugMacro /\<DBG\s*\>/ containedin=ALL
+      highlight DebugMacro guifg=#5c6370 ctermfg=8
+    ]])
+  end,
+})
