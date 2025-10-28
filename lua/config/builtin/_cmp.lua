@@ -1,5 +1,19 @@
 -- [[ Configure nvim-cmp ]]--
 -- See `:help cmp`
+-- gpt
+-- TEMP FIX for cmp-nvim-lsp on Neovim < 0.11
+if not vim.lsp._with_bufnr_fix then
+  local old_request = vim.lsp.buf_request
+  vim.lsp.buf_request = function(bufnr, method, params, handler)
+    if type(bufnr) == "function" then
+      -- backward compatibility fix
+      bufnr = vim.api.nvim_get_current_buf()
+    end
+    return old_request(bufnr, method, params, handler)
+  end
+  vim.lsp._with_bufnr_fix = true
+end
+-- end gpt
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
 require('luasnip.loaders.from_vscode').lazy_load()

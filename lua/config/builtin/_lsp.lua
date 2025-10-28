@@ -80,6 +80,7 @@ vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
 	end
 })
 
+
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
@@ -87,17 +88,42 @@ capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 -- Ensure the servers above are installed
 local mason_lspconfig = require 'mason-lspconfig'
 
+-- GPT change
+-- mason_lspconfig.setup {
+-- 	ensure_installed = vim.tbl_keys(servers),
+-- }
 mason_lspconfig.setup {
 	ensure_installed = vim.tbl_keys(servers),
+	automatic_installation = true,
+	automatic_enable = false, -- 🔧 évite d'appeler vim.lsp.enable() (absent sur Nvim < 0.11)
 }
 
-mason_lspconfig.setup_handlers {
-	function(server_name)
-		require('lspconfig')[server_name].setup {
-			capabilities = capabilities,
-			on_attach = on_attach,
-			settings = servers[server_name],
-			filetypes = (servers[server_name] or {}).filetypes,
-		}
-	end
-}
+-- mason_lspconfig.setup_handlers {
+-- 	function(server_name)
+-- 		require('lspconfig')[server_name].setup {
+-- 			capabilities = capabilities,
+-- 			on_attach = on_attach,
+-- 			settings = servers[server_name],
+-- 			filetypes = (servers[server_name] or {}).filetypes,
+-- 		}
+-- 	end
+-- }
+-- Configuration compatible Neovim 0.10.x
+local mason_lspconfig = require("mason-lspconfig")
+
+mason_lspconfig.setup({
+    ensure_installed = vim.tbl_keys(servers),
+    automatic_installation = true,
+    automatic_enable = false, -- évite l'appel à vim.lsp.enable()
+})
+
+-- Boucle manuelle pour attacher les serveurs
+for _, server_name in ipairs(mason_lspconfig.get_installed_servers()) do
+    require("lspconfig")[server_name].setup {
+        capabilities = capabilities,
+        on_attach = on_attach,
+        settings = servers[server_name],
+        filetypes = (servers[server_name] or {}).filetypes,
+    }
+end
+
